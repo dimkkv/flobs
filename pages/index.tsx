@@ -7,24 +7,60 @@ import { getTokenData, setupCoins } from '../lib/cg-client';
 import { getFlashLoans } from '../lib/get-flashloans';
 import {
   Chart as ChartJS,
+  ArcElement,
+  LineElement,
+  BarElement,
+  PointElement,
+  BarController,
+  BubbleController,
+  DoughnutController,
+  LineController,
+  PieController,
+  PolarAreaController,
+  RadarController,
+  ScatterController,
   CategoryScale,
   LinearScale,
-  BarElement,
+  LogarithmicScale,
+  RadialLinearScale,
+  TimeScale,
+  TimeSeriesScale,
+  Decimation,
+  Filler,
+  Legend,
   Title,
   Tooltip,
-  Legend,
+  SubTitle,
 } from 'chart.js';
 import { Chart, getElementAtEvent } from 'react-chartjs-2';
 import moment from 'moment';
 import { useRef } from 'react';
 
 ChartJS.register(
+  ArcElement,
+  LineElement,
+  BarElement,
+  PointElement,
+  BarController,
+  BubbleController,
+  DoughnutController,
+  LineController,
+  PieController,
+  PolarAreaController,
+  RadarController,
+  ScatterController,
   CategoryScale,
   LinearScale,
-  BarElement,
+  LogarithmicScale,
+  RadialLinearScale,
+  TimeScale,
+  TimeSeriesScale,
+  Decimation,
+  Filler,
+  Legend,
   Title,
   Tooltip,
-  Legend
+  SubTitle
 );
 
 const Home = ({ info: i }) => {
