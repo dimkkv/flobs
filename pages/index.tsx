@@ -192,6 +192,7 @@ export async function getStaticProps() {
     props: {
       info: { info: info, date: moment(date).format('MMMM Do YYYY hh:mm:ss') },
     },
+    revalidate: 360,
   };
 }
 
