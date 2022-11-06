@@ -2,7 +2,7 @@ import { Alert } from './alerts-flashloan';
 import { getTokenData, setupCoins } from './cg-client';
 import { getFlashLoans } from './get-flashloans';
 
-export async function getGqlInfo(th?: number) {
+export async function getGqlInfo(th: number = 0) {
   await setupCoins();
 
   let date: Date = new Date();
