@@ -12,7 +12,10 @@ export default async function handler(
   const prisma = new PrismaClient();
   const data = req.body as FortaWebhook;
   console.log(data);
-  if (!data || !data.alerts || data?.alerts?.length === 0) return;
+  if (!data || !data.alerts || data?.alerts?.length === 0) {
+    res.status(500);
+    return;
+  }
   const alert = data.alerts[0];
   const tokens = JSON.parse(alert.metadata || '{}').tokens.split(',');
   const tokens_info = await Promise.all(

@@ -11,6 +11,8 @@ const CoinGeckoClient = new CG();
 let coins: CGCoin[];
 queueMicrotask;
 
+setupCoins();
+
 export async function setupCoins() {
   try {
     const resp = await axios.get(
