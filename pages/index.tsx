@@ -1,10 +1,6 @@
-import { gql } from '@apollo/client';
-import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import { Alert, Alerts } from '../lib/alerts-flashloan';
-import { getTokenData, setupCoins } from '../lib/cg-client';
-import { getFlashLoans } from '../lib/get-flashloans';
+
 import {
   Chart as ChartJS,
   ArcElement,
@@ -35,6 +31,9 @@ import {
 import { Chart, getElementAtEvent } from 'react-chartjs-2';
 import moment from 'moment';
 import { useRef } from 'react';
+import axios from 'axios';
+import { utils } from 'lib/utils';
+import { FlResponse } from 'lib/flobs';
 
 ChartJS.register(
   ArcElement,
@@ -64,7 +63,8 @@ ChartJS.register(
 );
 
 const Home = ({ info: i }) => {
-  const { info, date } = i;
+  const { info: inf, date } = i;
+  const info = inf as FlResponse[];
   const options = {
     responsive: true,
     plugins: {
@@ -110,9 +110,14 @@ const Home = ({ info: i }) => {
     }
 
     const data = getElementAtEvent(chart, event);
-    console.log(data[0].index);
-    const item = info[data[0].index];
-    window.open(`https://www.coingecko.com/en/coins/${item.symbol}`, '_blank');
+    //console.log(data[0].index);
+    try {
+      const item = info[data[0].index];
+      window.open(
+        utils.getTenderlyContractUrl(item.chain, item.address),
+        '_blank'
+      );
+    } catch (error) {}
   };
 
   return (
@@ -121,7 +126,7 @@ const Home = ({ info: i }) => {
         <title>Flobs | Flashloan observer</title>
         <link rel='icon' href='/favicon.ico' />
       </Head>
-
+      <div></div>
       <Chart
         type='bar'
         options={options}
@@ -145,49 +150,9 @@ const Home = ({ info: i }) => {
 };
 
 export async function getStaticProps() {
-  await setupCoins();
-  let date: Date = new Date();
-  let tokens_data = new Map();
-  const raw_alerts: Alert[] = await getFlashLoans();
-  raw_alerts.forEach((alert) => {
-    const tokens = alert.metadata.tokens.split(',');
-    tokens.forEach((token, idx) => {
-      const prof = parseFloat(alert.metadata.profit);
-      if (idx === raw_alerts.length - 1) date = raw_alerts[idx].createdAt;
-      if (tokens_data.has(token)) {
-        tokens_data.set(token, {
-          profit: tokens_data.get(token).profit + prof,
-          chainId: alert.source.block.chainId,
-        });
-      } else {
-        tokens_data.set(token, {
-          profit: prof,
-          chainId: alert.source.block.chainId,
-        });
-      }
-    });
-  });
-  //console.log(tokens_data);
-  let promises: any = [];
-  tokens_data.forEach((value, key) => {
-    if (value.profit > 30) promises.push(getTokenData(key, value.chainId));
-  });
-  const token_data = await Promise.all(promises);
-  //console.log(JSON.stringify(token_data, null, 2));
-
-  const info = token_data
-    .filter((x) => x !== null)
-    .map((x) => {
-      return {
-        address: x.address,
-        name: x.coinShortData.name || null,
-        symbol: x.coinShortData.symbol || null,
-        chain: x.chain,
-        chainName: x.chainName,
-        profit: tokens_data.get(x.address).profit,
-      };
-    });
-
+  const { data } = await axios.get(utils.api_url + '/fl?profilt_threshold=30');
+  const { info: inf, date } = data;
+  const info = inf as FlResponse[];
   return {
     props: {
       info: { info: info, date: moment(date).format('MMMM Do YYYY hh:mm:ss') },

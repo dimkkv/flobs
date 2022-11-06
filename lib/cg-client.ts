@@ -44,6 +44,6 @@ export const getTokenData = async (address, chain) => {
     return null;
   }
   const result = { address, chain, chainName, coinShortData };
-  console.log(result);
+  //console.log(result);
   return result;
 };

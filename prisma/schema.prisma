@@ -1,0 +1,22 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model flashLoan {
+  id           Int      @id @default(autoincrement())
+  assets       String[]
+  assets_info  String //JSON
+  chainId      Int
+  profit       Float
+  txHash       String
+  forta_source String //JSON
+  timestamp    DateTime @default(now())
+}
