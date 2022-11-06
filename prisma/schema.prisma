@@ -16,6 +16,7 @@ model flashLoan {
   assets_info  String //JSON
   chainId      Int
   profit       Float
+  chainName    String?
   txHash       String
   forta_source String //JSON
   timestamp    DateTime @default(now())
