@@ -36,6 +36,7 @@ export function getCoins() {
 
 //3. Make calls
 export const getTokenData = async (address, chain) => {
+  if (!coins) await setupCoins();
   const chainName = helper.getChainByChainId(chain);
   const nativeToken = helper.getNativeTokenByChainId(chain);
   const coinShortData = coins.find(
