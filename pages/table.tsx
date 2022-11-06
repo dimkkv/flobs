@@ -11,6 +11,7 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table';
+import { getGqlInfo } from 'lib/get-gql-info';
 
 function Table({ info }: { info: { info: FlResponse[] } }) {
   const columnHelper = createColumnHelper<FlResponse>();
@@ -141,8 +142,7 @@ function Table({ info }: { info: { info: FlResponse[] } }) {
 }
 
 export async function getStaticProps() {
-  const { data } = await axios.get(utils.api_url + '/fl');
-  const { info: inf, date } = data;
+  const { info: inf, date } = await getGqlInfo();
   const info = inf as FlResponse[];
   return {
     props: {

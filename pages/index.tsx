@@ -34,6 +34,7 @@ import { useRef } from 'react';
 import axios from 'axios';
 import { utils } from 'lib/utils';
 import { FlResponse } from 'lib/flobs';
+import { getGqlInfo } from 'lib/get-gql-info';
 
 ChartJS.register(
   ArcElement,
@@ -150,8 +151,7 @@ const Home = ({ info: i }) => {
 };
 
 export async function getStaticProps() {
-  const { data } = await axios.get(utils.api_url + '/fl?profilt_threshold=30');
-  const { info: inf, date } = data;
+  const { info: inf, date } = await getGqlInfo(30);
   const info = inf as FlResponse[];
   return {
     props: {

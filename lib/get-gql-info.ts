@@ -1,16 +1,10 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import axios from 'axios';
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { getTokenData, setupCoins } from 'lib/cg-client';
-import { Alert } from 'lib/alerts-flashloan';
-import { getFlashLoans } from 'lib/get-flashloans';
+import { Alert } from './alerts-flashloan';
+import { getTokenData, setupCoins } from './cg-client';
+import { getFlashLoans } from './get-flashloans';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<any>
-) {
+export async function getGqlInfo(th?: number) {
   await setupCoins();
-  let th = parseInt(req.query?.profilt_threshold?.toString() || '0');
+
   let date: Date = new Date();
   let tokens_data = new Map();
   const raw_alerts: Alert[] = await getFlashLoans();
@@ -56,5 +50,5 @@ export default async function handler(
       };
     });
 
-  res.status(200).json({ info, date });
+  return { info, date };
 }
