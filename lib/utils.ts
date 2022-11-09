@@ -25,6 +25,8 @@ const getTenderlyStab = (chainId) => {
       return `polygon`;
     case 56:
       return `binance`;
+    case 43114:
+      return 'ava';
     default:
       break;
   }
